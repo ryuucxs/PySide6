@@ -14,7 +14,6 @@ def safe_divide(a, b):
 
 
 class CalculatorUI(QMainWindow):
-    """Dark-themed calculator with full arithmetic logic."""
 
     OPERATIONS = {
         "÷": safe_divide,
@@ -40,7 +39,7 @@ class CalculatorUI(QMainWindow):
         main_layout.setContentsMargins(12, 12, 12, 12)
         main_layout.setSpacing(12)
 
-        # Top area: small expression label + big display
+        # Top area: small expression label + display
         self.expr_label = QLabel("")
         self.expr_label.setObjectName("expr")
         self.expr_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
@@ -53,14 +52,13 @@ class CalculatorUI(QMainWindow):
         main_layout.addWidget(self.expr_label)
         main_layout.addWidget(self.display)
 
-        # Button grid area
+        # Button area
         buttons_widget = QWidget()
         buttons_layout = QGridLayout(buttons_widget)
         buttons_layout.setSpacing(12)
         buttons_layout.setContentsMargins(6, 6, 6, 6)
 
-        # Layout pattern matching the screenshot
-        # Each inner list: (label, role)
+        # Each inner list -> label, role
         grid = [
             [('C',  'normal'), ('±', 'normal'), ('⌫', 'normal'), ('÷', 'op')],
             [('7',  'normal'), ('8', 'normal'), ('9', 'normal'), ('×', 'op')],
@@ -69,7 +67,7 @@ class CalculatorUI(QMainWindow):
             [('0',  'normal'), ('.', 'normal'), ('=', 'equal')],
         ]
 
-        # Create buttons and add to grid
+        # Create and add buttons to layout
         self.buttons = {}
         for r, row in enumerate(grid):
             for c, (text, role) in enumerate(row):
@@ -83,19 +81,17 @@ class CalculatorUI(QMainWindow):
                 else:
                     buttons_layout.addWidget(btn, r, c)
 
-        # Connect signals
         self.connect_signals()
 
         main_layout.addWidget(buttons_widget)
 
-        # lower spacing area to mimic card shadow
         footer = QWidget()
         footer.setFixedHeight(6)
         main_layout.addWidget(footer)
 
         self.apply_styles()
 
-    # ── Signal Connections ──────────────────────────────────────
+    # Signal Connections
 
     def connect_signals(self):
         # Number buttons
@@ -121,7 +117,7 @@ class CalculatorUI(QMainWindow):
         # Backspace
         self.buttons['⌫'].clicked.connect(self.backspace_pressed)
 
-    # ── Slot Methods ───────────────────────────────────────────
+    # Slot Methods
 
     def number_pressed(self):
         digit = self.sender().text()
@@ -190,7 +186,7 @@ class CalculatorUI(QMainWindow):
         if current:
             self.display.setText(current[:-1])
 
-    # ── Helpers ────────────────────────────────────────────────
+    # Helpers
 
     def format_number(self, value):
         """Display integers without .0 and floats normally."""
@@ -198,10 +194,10 @@ class CalculatorUI(QMainWindow):
             return str(int(value))
         return str(value)
 
-    # ── Styles ─────────────────────────────────────────────────
+    # Styles 
 
     def apply_styles(self):
-        # Overall dark window background
+        # Background
         self.setStyleSheet("""
         QMainWindow { background-color: #0f1114; }
 
@@ -278,3 +274,4 @@ if __name__ == '__main__':
     w = CalculatorUI()
     w.show()
     sys.exit(app.exec())
+
