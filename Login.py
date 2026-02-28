@@ -2,18 +2,27 @@ import json
 import sys
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
 
+def log(func):
+    def wrapper(*args, **kwargs):
+        log = func(*args, **kwargs)
+        print(f"[LOG] {func.__name__} called")
+        return log
+    return wrapper
+
 class Model:
     def __init__(self, view):
         self.view = view
         self.login_data = {}
         self.filename = "TaskManagerLogin.json"
         
+    @log
     def save_user(self, username, password):
         self.login_data["User Login"] = [username, password]
         with open(self.filename, "w") as file:
             json.dump(self.login_data, file)
             return self.login_data["User Login"]
 
+    @log
     def create_admin_login(self):
         admin_username = "admin"
         admin_password = "admin104"
@@ -21,18 +30,22 @@ class Model:
         with open(self.filename, "w") as file:
             json.dump(self.login_data, file)
             return self.login_data["Admin Login"]
-            
+        
+    @log       
     def load_user(self):
         with open(self.filename, "r") as file:
             self.login_data = json.load(file)
             return self.login_data
     
+    @log
     def sign_up_button(self, username, password):
+        self.save_user(username, password)
         if not username or not password:
             return "Please enter a username and password"
         self.save_user(username, password)
         return username, password, "User created successfully"
     
+    @log
     def login_button(self, username, password):
         self.load_user()
         if "User Login" not in self.login_data:
@@ -43,6 +56,7 @@ class Model:
         else:
             return "Invalid username or password"
         
+    @log
     def admin_login_button(self, username, password):
         self.load_user()
         if "Admin Login" not in self.login_data:
@@ -53,6 +67,7 @@ class Model:
         else:
             return "Invalid admin username or password"
         
+    @log
     def reset_inputs(self):
         self.view.username_input.clear()
         self.view.password_input.clear()
